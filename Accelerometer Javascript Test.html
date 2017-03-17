@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!-- saved from url=(0064)file:///Users/will/Desktop/Accelerometer%20Javascript%20Test.htm -->
+<html xmlns="http://www.w3.org/1999/xhtml" class="gr__albertosarullo_com"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Accelerometer Javascript Test</title>
+<meta name="viewport" content="width=device-width,user-scalable=yes">
+<style>
+body {
+	font-family: helvetica, arial, sans serif;
+}
+#sphere {
+	position: absolute;	
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+	-webkit-radius: 50px;
+	background-color: blue;
+}
+</style>
+<style type="text/css">.y-bubble{position:absolute;z-index:9999;margin:0;padding:10px;min-width:300px;max-width:500px;border-radius:5px;background-color:rgba(13,13,13,0.8);box-shadow:0 0 20px rgba(0,0,0,0.8);color:#fff !important;text-align:left;font-weight:300;font-size:16px;font-family:"Roboto", 'Helvetica', sans-serif;line-height:1.5}.y-bubble p{margin:2px 0;color:#fff !important;line-height:20px}.y-bubble .y-bubble-word{color:#f60}.y-bubble .y-arrow{position:absolute;width:0;height:0;border-right:10px solid transparent;border-left:10px solid transparent}.y-bubble .y-bubble-explains{margin:10px 0}.y-bubble .y-clearfix:before,.y-bubble .y-clearfix:after{display:table;content:''}.y-bubble .y-clearfix:after{clear:both}.y-bubble .y-bubble-more{margin-top:10px}.y-bubble .y-bubble-more .y-pull-left{float:left}.y-bubble .y-bubble-more .y-pull-right{float:right}.y-bubble .y-bubble-more a{color:#ffffff !important;text-decoration:none !important}.y-bubble .y-bubble-more a:hover{text-decoration:underline !important}.y-bubble .spinner{display:inline-block;position:relative;margin:0 5px;width:20px;height:20px;vertical-align:middle}.y-bubble .spinner.hide{display:none}.y-bubble .spinner .double-bounce1,.y-bubble .spinner .double-bounce2{width:100%;height:100%;border-radius:50%;background-color:#ffffff;opacity:0.6;position:absolute;top:0;left:0;-webkit-animation:sk-bounce 2.0s infinite ease-in-out;animation:sk-bounce 2.0s infinite ease-in-out}.y-bubble .spinner .double-bounce2{-webkit-animation-delay:-1.0s;animation-delay:-1.0s}@-webkit-keyframes sk-bounce{0%,100%{-webkit-transform:scale(0)}50%{-webkit-transform:scale(1)}}@keyframes sk-bounce{0%,100%{transform:scale(0);-webkit-transform:scale(0)}50%{transform:scale(1);-webkit-transform:scale(1)}}
+</style></head>
+
+<body data-gr-c-s-loaded="true">
+<div id="content">
+    <h1>Accelerometer Javascript Test</h1>
+    <div id="sphere" style="top: 0px; left: 0px;"></div>
+<ul>
+	<li>acceleration x: <span id="accelerationX"></span>g</li>
+	<li>acceleration y: <span id="accelerationY"></span>g</li>
+	<li>acceleration z: <span id="accelerationZ"></span>g</li>
+	<li>rotation alpha: <span id="rotationAlpha"></span>degree</li>
+	<li>rotation beta: <span id="rotationBeta"></span>degree</li>
+	<li>rotation gamma: <span id="rotationGamma"></span>degree</li>
+</ul>
+
+test: <span id="test"></span>
+</div>
+<script type="text/javascript">
+
+var x = 0, y = 0,
+    vx = 0, vy = 0,
+	ax = 0, ay = 0;
+	
+var sphere = document.getElementById("sphere");
+
+if (window.DeviceMotionEvent != undefined) {
+	window.ondevicemotion = function(e) {
+		ax = event.accelerationIncludingGravity.x * 5;
+		ay = event.accelerationIncludingGravity.y * 5;
+		document.getElementById("accelerationX").innerHTML = e.accelerationIncludingGravity.x;
+		document.getElementById("accelerationY").innerHTML = e.accelerationIncludingGravity.y;
+		document.getElementById("accelerationZ").innerHTML = e.accelerationIncludingGravity.z;
+
+		if ( e.rotationRate ) {
+			document.getElementById("rotationAlpha").innerHTML = e.rotationRate.alpha;
+			document.getElementById("rotationBeta").innerHTML = e.rotationRate.beta;
+			document.getElementById("rotationGamma").innerHTML = e.rotationRate.gamma;
+		}		
+	}
+
+	setInterval( function() {
+		var landscapeOrientation = window.innerWidth/window.innerHeight > 1;
+		if ( landscapeOrientation) {
+			vx = vx + ay;
+			vy = vy + ax;
+		} else {
+			vy = vy - ay;
+			vx = vx + ax;
+		}
+		vx = vx * 0.98;
+		vy = vy * 0.98;
+		y = parseInt(y + vy / 50);
+		x = parseInt(x + vx / 50);
+		
+		boundingBoxCheck();
+		
+		sphere.style.top = y + "px";
+		sphere.style.left = x + "px";
+		
+	}, 25);
+} 
+
+
+function boundingBoxCheck(){
+	if (x<0) { x = 0; vx = -vx; }
+	if (y<0) { y = 0; vy = -vy; }
+	if (x>document.documentElement.clientWidth-20) { x = document.documentElement.clientWidth-20; vx = -vx; }
+	if (y>document.documentElement.clientHeight-20) { y = document.documentElement.clientHeight-20; vy = -vy; }
+	
+}
+
+</script>
+
+
+
+<script type="text/javascript">( function(){ window.SIG_EXT = {}; } )()</script></body></html>
